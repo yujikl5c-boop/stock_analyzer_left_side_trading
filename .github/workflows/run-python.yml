@@ -8,9 +8,22 @@ jobs:
     steps:
       - name: 下载代码
         uses: actions/checkout@v4
+
       - name: 安装 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: 安装依赖
+        run: |
+          pip install --upgrade pip
+          pip install mootdx pandas numpy openpyxl
+
       - name: 运行 main.py
         run: python main.py
+
+      - name: 上传生成的 HTML 看板（可选）
+        uses: actions/upload-artifact@v4
+        with:
+          name: left-index
+          path: left_index.html
