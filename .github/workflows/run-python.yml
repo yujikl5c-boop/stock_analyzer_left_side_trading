@@ -1,0 +1,16 @@
+name: 自动运行我的 Python 脚本
+
+on: [push]
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下载代码
+        uses: actions/checkout@v4
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 运行 main.py
+        run: python main.py
