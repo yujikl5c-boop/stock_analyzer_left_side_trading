@@ -9,6 +9,14 @@ jobs:
       - name: 下载代码
         uses: actions/checkout@v4
 
+      # ---------- 新增：缓存 left_portfolio.json ----------
+      - name: 恢复持仓状态缓存
+        id: cache-portfolio
+        uses: actions/cache@v4
+        with:
+          path: left_portfolio.json      # 要缓存的文件路径
+          key: left-portfolio-${{ github.ref_name }}  # 缓存的唯一标识，按分支区分
+
       - name: 安装 Python
         uses: actions/setup-python@v5
         with:
@@ -22,7 +30,7 @@ jobs:
       - name: 运行 main.py
         run: python main.py
 
-      - name: 上传生成的 HTML 看板（可选）
+      - name: 上传生成的 HTML 看板
         uses: actions/upload-artifact@v4
         with:
           name: left-index
