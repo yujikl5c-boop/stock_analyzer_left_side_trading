@@ -33,8 +33,15 @@ jobs:
       - name: 运行 main.py
         run: python main.py
 
-      - name: 上传生成的 HTML 看板
-        uses: actions/upload-artifact@v4
+      # ---------- 新增：部署到 GitHub Pages ----------
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: left-index
-          path: left_index.html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          destination_dir: ./
+          keep_files: false
+          full_commit_message: '更新左侧伏击看板'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
