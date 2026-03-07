@@ -1,6 +1,10 @@
 name: 自动运行我的 Python 脚本
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 6 * * 1-5'   # 北京时间交易日 14:27 运行（UTC 6:27）
 
 jobs:
   run-python:
@@ -9,13 +13,12 @@ jobs:
       - name: 下载代码
         uses: actions/checkout@v4
 
-      # ---------- 新增：缓存 left_portfolio.json ----------
       - name: 恢复持仓状态缓存
         id: cache-portfolio
         uses: actions/cache@v4
         with:
-          path: left_portfolio.json      # 要缓存的文件路径
-          key: left-portfolio-${{ github.ref_name }}  # 缓存的唯一标识，按分支区分
+          path: left_portfolio.json
+          key: left-portfolio-${{ github.ref_name }}
 
       - name: 安装 Python
         uses: actions/setup-python@v5
