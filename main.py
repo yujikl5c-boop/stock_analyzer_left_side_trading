@@ -1,7 +1,7 @@
 import os
 import json
 import time
-import datetime
+from datetime import datetime, timezone, timedelta
 import numpy as np
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -134,8 +134,8 @@ def analyze_stock(stock_info, client):
 # ==========================================
 # 🌐 HTML 实时看板生成器
 # ==========================================
-def generate_dashboard(portfolio, current_market_data):
-    today_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+def generate_dashboard(portfolio, current_market_data, current_time):
+    today_str = current_time
     
     holdings_value = 0.0
     holdings_html = ""
@@ -234,13 +234,17 @@ def generate_dashboard(portfolio, current_market_data):
 # 🚀 主程序入口 (交易撮合枢纽)
 # ==========================================
 if __name__ == '__main__':
+    # ========== 新增：获取北京时间 ==========
+    utc_now = datetime.now(timezone.utc)
+    beijing_now = utc_now + timedelta(hours=8)
+    today_date = beijing_now.strftime('%Y-%m-%d')
+    now_time = beijing_now.strftime('%Y-%m-%d %H:%M:%S')
+    # ======================================
+    
     print("===========================================")
     print("📡 左侧伏击：实盘/模拟交易中枢已启动...")
     print("===========================================")
-    
-    today_date = datetime.date.today().strftime('%Y-%m-%d')
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    
+
     portfolio = load_portfolio()
     
     meta_df = pd.read_excel(EXCEL_LIST, usecols=[0, 1])
@@ -352,7 +356,7 @@ if __name__ == '__main__':
                 print(f"🔫 买入触发: {stock['name']} ({code}) - 乖离率极值抄底")
 
     save_portfolio(portfolio)
-    generate_dashboard(portfolio, market_data)
+    generate_dashboard(portfolio, market_data, now_time)
 
     print("✅ 左侧伏击日内任务完成，正在退出...")
     os._exit(0)
